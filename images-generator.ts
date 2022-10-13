@@ -1,14 +1,6 @@
 import mergeImg from 'merge-img';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-
-const imageParts = [
-  { name: 'head', attrNames: ['Regular Head'] },
-  { name: 'eye', attrNames: ['Normal Eyes', 'Tired Eyes', 'Brused Eyes'] },
-  { name: 'brow', attrNames: ['Thick Brows', 'Greyish Brows', 'Flat Brows'] },
-  { name: 'nose', attrNames: ['Snub Nose', 'Button Nose', 'Droopy Nose'] },
-  { name: 'hair', attrNames: ['Normal Hair', 'Hipster Style', 'Messy Hair', 'Overdue for Haircut', 'Bald Patches'] },
-  { name: 'mouth', attrNames: ['Smirk', 'Regular Smile', 'Wide Smile'] }
-];
+import { attributes as imageParts } from './attributes';
 
 const IMG_SRC_FOLDER = './images';
 const NFTS_FOLDER = './nfts';
