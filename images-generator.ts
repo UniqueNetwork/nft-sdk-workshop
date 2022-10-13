@@ -1,5 +1,5 @@
 import mergeImg from 'merge-img';
-import { existsSync, mkdirSync } from 'fs';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 
 const imageParts = [
   { name: 'head', attrNames: ['Regular Head'] },
@@ -12,6 +12,7 @@ const imageParts = [
 
 const IMG_SRC_FOLDER = './images';
 const NFTS_FOLDER = './nfts';
+const NFTS_METADATA_FILE = 'nfts_metadata.json';
 
 function createDirIfNotExist(path: string) {
   if (!existsSync(path)) {
@@ -76,10 +77,15 @@ async function genImages(faces: any[]) {
   return images;
 }
 
+function saveNftsMetadata(images: any[]) {
+  writeFileSync(NFTS_METADATA_FILE, JSON.stringify(images));
+}
+
 async function main() {
   const faces = genFaces(imageParts);
   const first20Faces = faces.slice(0, 20);
   const images = await genImages(first20Faces);
+  saveNftsMetadata(images);
   console.log('images: ', JSON.stringify(images, null, 2));
   console.log('length: ', faces.length);
 }
