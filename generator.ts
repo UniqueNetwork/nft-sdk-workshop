@@ -1,3 +1,5 @@
+import mergeImg from 'merge-img';
+import { existsSync, mkdirSync } from 'fs';
 
 const imageParts = [
   { name: 'head', attrNames: ['Regular Head'] },
@@ -7,6 +9,15 @@ const imageParts = [
   { name: 'hair', attrNames: ['Normal Hair', 'Hipster Style', 'Messy Hair', 'Overdue for Haircut', 'Bald Patches'] },
   { name: 'mouth', attrNames: ['Smirk', 'Regular Smile', 'Wide Smile'] }
 ];
+
+const IMG_SRC_FOLDER = './images';
+const NFTS_FOLDER = './nfts';
+
+function createDirIfNotExist(path: string) {
+  if (!existsSync(path)) {
+    mkdirSync(path);
+  }
+}
 
 function genFaces(imageParts: any[]) {
   const faces: any[] = [];
@@ -33,9 +44,43 @@ function genFaces(imageParts: any[]) {
   return faces;
 }
 
-function main() {
+async function genImage(images: any[], outputFile: string) {
+  const image = await mergeImg(images);
+  const saveResult = await image.write(outputFile);
+  return image;
+}
+
+async function genImages(faces: any[]) {
+  const images: any[] = [];
+
+  createDirIfNotExist(NFTS_FOLDER);
+  
+  for(let faceIdx = 0; faceIdx < faces.length; faceIdx++) {
+    const facePieces = faces[faceIdx];
+    const outputFile = `${NFTS_FOLDER}/nft_image_${faceIdx}.png`;
+    const faceImages = facePieces.map((piece: any) => ({
+      src: `${IMG_SRC_FOLDER}/${piece.image}`,
+      offsetX: piece.name === 'head' ? 0 :  -1706,
+      offsetY: 0,
+    }));
+
+    const image = await genImage(faceImages, outputFile);
+    console.log(`Image saved to: ${outputFile}`)
+
+    images.push({
+      image: outputFile,
+      attributes: facePieces.map(({ name, value }: any) => ({ name, value })),
+    });
+  }
+
+  return images;
+}
+
+async function main() {
   const faces = genFaces(imageParts);
-  console.log('faces: ', faces);
+  const first20Faces = faces.slice(0, 20);
+  const images = await genImages(first20Faces);
+  console.log('images: ', JSON.stringify(images, null, 2));
   console.log('length: ', faces.length);
 }
 
