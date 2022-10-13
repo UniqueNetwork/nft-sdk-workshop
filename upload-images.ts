@@ -7,11 +7,12 @@ import { basename } from 'path';
 const NFTS_METADATA_FILE = 'nfts_metadata.json';
 const URL = 'https://rest.unique.network/opal/v1/ipfs/upload-file';
 
-interface INFTMetadata {
+export interface INFTMetadata {
   image: string;
-  attributes: Array<{ name: string; value: string; }>
+  attributes: Array<{ name: string; value: string; }>;
   cid?: string;
   fileUrl?: string;
+  tokenId?: number;
 }
 
 interface IServerResponse {
