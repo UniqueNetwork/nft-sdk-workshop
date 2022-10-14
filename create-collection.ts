@@ -49,6 +49,7 @@ export async function createCollection(sdk: Sdk, address: string, formattedAttri
   console.log('Collection ID: ', collectionId);
 }
 async function main() {
+  // https://github.com/UniqueNetwork/unique-sdk/tree/master/packages/substrate-client/tokens/methods/collection/create-collection-ex-new
   const signer = await KeyringProvider.fromMnemonic(MNEMONIC);
   const sdk = new Sdk({
     chainWsUrl: CHAIN_WS_URL,
