@@ -39,6 +39,11 @@ export async function createCollection(sdk: Sdk, address: string, formattedAttri
         //   }
         // },
     },
+    permissions: {
+      nesting: {
+        tokenOwner: true,
+      }
+    }
   });
 
   console.log('Collection ID: ', collectionId);

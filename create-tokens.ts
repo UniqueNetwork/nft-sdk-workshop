@@ -8,7 +8,7 @@ import { INFTMetadata } from './upload-images';
 const MNEMONIC = 'bus ahead nation nice damp recall place dance guide media clap language';
 const CHAIN_WS_URL = 'wss://ws-opal.unique.network';
 const NFTS_METADATA_FILE = 'nfts_metadata.json';
-const COLLECTION_ID = 1394;
+const COLLECTION_ID = 1399;
 
 function getAttributeIdx(name: string, attrName: string) {
   const attribute = attributes.find((attr) => attr.name === name);
