@@ -9,7 +9,7 @@ import { CreateMultipleTokensArguments } from '@unique-nft/substrate-client/toke
 const MNEMONIC = 'bus ahead nation nice damp recall place dance guide media clap language';
 const CHAIN_WS_URL = 'wss://ws-opal.unique.network';
 const NFTS_METADATA_FILE = 'nfts_metadata.json';
-const COLLECTION_ID = 1401;
+const COLLECTION_ID = 1402;
 
 function getAttributeIdx(name: string, attrName: string) {
   const attribute = attributes.find((attr) => attr.name === name);
@@ -33,21 +33,24 @@ async function main() {
     address: address,
     collectionId: COLLECTION_ID,
     data: nftsMetadata.map((nftMetadata) => ({
-      image: {
-        ipfsCid: nftMetadata.cid as string,
+      data: {
+        image: {
+          ipfsCid: nftMetadata.cid as string,
+        },
+        encodedAttributes: nftMetadata.attributes.reduce(
+          (acc, { name, value }, attrIdx) => ({
+            ...acc,
+            [attrIdx]: getAttributeIdx(name, value),
+          }),
+          {},
+        ),
+
       },
-      encodedAttributes: nftMetadata.attributes.reduce(
-        (acc, { name, value }, attrIdx) => ({
-          ...acc,
-          [attrIdx]: getAttributeIdx(name, value),
-        }),
-        {},
-      ),
     })),
   };
 
   const result = await sdk.tokens.createMultiple.submitWaitResult(createMultiTokenArgs);
-  console.log(JSON.stringify(result, null ,2));
+  console.log(JSON.stringify(result, null, 2));
 
   await sdk.api.disconnect();
 }
