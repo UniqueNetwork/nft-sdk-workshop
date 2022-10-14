@@ -10,6 +10,7 @@ const PARENT_TOKEN_ID = 1;
 const CHILD_TOKEN_ID = 2;
 
 async function main() {
+  // https://github.com/UniqueNetwork/unique-sdk/tree/master/packages/substrate-client/tokens/methods/nesting/nest-token
   const signer = await KeyringProvider.fromMnemonic(MNEMONIC);
   const address = signer.getAddress();
   const sdk = new Sdk({
