@@ -1,3 +1,4 @@
 /node_modules
 /nfts
 nfts_metadata.json
+.DS_Store
