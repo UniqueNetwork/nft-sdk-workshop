@@ -5,7 +5,7 @@ import { NestTokenArguments } from '@unique-nft/substrate-client/tokens';
 
 const MNEMONIC = 'bus ahead nation nice damp recall place dance guide media clap language';
 const CHAIN_WS_URL = 'wss://ws-opal.unique.network';
-const COLLECTION_ID = 1399;
+const COLLECTION_ID = 1401;
 const PARENT_TOKEN_ID = 1;
 const CHILD_TOKEN_ID = 2;
 

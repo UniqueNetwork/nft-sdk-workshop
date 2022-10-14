@@ -9,7 +9,7 @@ import { CreateMultipleTokensArguments } from '@unique-nft/substrate-client/toke
 const MNEMONIC = 'bus ahead nation nice damp recall place dance guide media clap language';
 const CHAIN_WS_URL = 'wss://ws-opal.unique.network';
 const NFTS_METADATA_FILE = 'nfts_metadata.json';
-const COLLECTION_ID = 1399;
+const COLLECTION_ID = 1401;
 
 function getAttributeIdx(name: string, attrName: string) {
   const attribute = attributes.find((attr) => attr.name === name);
