@@ -1,9 +1,10 @@
 import { Sdk } from '@unique-nft/substrate-client';
 import { KeyringProvider } from '@unique-nft/accounts/keyring';
 import '@unique-nft/substrate-client/tokens';
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { attributes } from './attributes';
 import { INFTMetadata } from './upload-images';
+import { CreateMultipleTokensArguments } from '@unique-nft/substrate-client/tokens';
 
 const MNEMONIC = 'bus ahead nation nice damp recall place dance guide media clap language';
 const CHAIN_WS_URL = 'wss://ws-opal.unique.network';
@@ -15,16 +16,23 @@ function getAttributeIdx(name: string, attrName: string) {
   return attribute?.attrNames.indexOf(attrName);
 }
 
-export async function createToken(
-  sdk: Sdk,
-  address: string,
-  collectionId: number,
-  nftMetadata: INFTMetadata,
-) {
-  const { parsed: { tokenId } } = await sdk.tokens.create.submitWaitResult({
-    address,
-    collectionId,
-    data: {
+async function main() {
+  // https://github.com/UniqueNetwork/unique-sdk/tree/master/packages/substrate-client/tokens/methods/token/create-token
+  // https://github.com/UniqueNetwork/unique-sdk/tree/master/packages/substrate-client/tokens/methods/token/create-multiple-tokens
+  const signer = await KeyringProvider.fromMnemonic(MNEMONIC);
+  const address = signer.getAddress();
+  const sdk = new Sdk({
+    chainWsUrl: CHAIN_WS_URL,
+    signer,
+  });
+  await sdk.connect();
+  const fileData = readFileSync(NFTS_METADATA_FILE);
+  const nftsMetadata = JSON.parse(fileData.toString()) as INFTMetadata[];
+  
+  const createMultiTokenArgs: CreateMultipleTokensArguments = {
+    address: address,
+    collectionId: COLLECTION_ID,
+    data: nftsMetadata.map((nftMetadata) => ({
       image: {
         ipfsCid: nftMetadata.cid as string,
       },
@@ -35,38 +43,12 @@ export async function createToken(
         }),
         {},
       ),
-      // encodedAttributes: {
-      //   0: 0,
-      //   1: { '_': 'Murzik' },
-      //   2: [1, 2, 3],
-      // },
-    }
-  });
+    })),
+  };
 
+  const result = await sdk.tokens.createMultiple.submitWaitResult(createMultiTokenArgs);
+  console.log(JSON.stringify(result, null ,2));
 
-  return tokenId;
-}
-
-async function main() {
-  const signer = await KeyringProvider.fromMnemonic(MNEMONIC);
-  const address = signer.getAddress();
-  const sdk = new Sdk({
-    chainWsUrl: CHAIN_WS_URL,
-    signer,
-  });
-  await sdk.connect();
-
-  const fileData = readFileSync(NFTS_METADATA_FILE);
-  const nftsMetadata = JSON.parse(fileData.toString()) as INFTMetadata[];
-
-  for (let nftsIdx = 0; nftsIdx < nftsMetadata.length; nftsIdx++) {
-    const nftMetadata = nftsMetadata[nftsIdx];
-    const tokenId = await createToken(sdk, address, COLLECTION_ID, nftMetadata);
-    console.log('Token created with id: ', tokenId);
-    nftMetadata.tokenId = tokenId;
-  }
-  
-  writeFileSync(NFTS_METADATA_FILE, JSON.stringify(nftsMetadata));
   await sdk.api.disconnect();
 }
 
