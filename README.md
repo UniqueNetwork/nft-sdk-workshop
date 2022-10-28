@@ -2,6 +2,7 @@
 
 ## Steps: 
 
+0. `npm install`
 1. `npm run generate-images`
 2. `npm run upload-images`
 3. `npm run create-collection`
